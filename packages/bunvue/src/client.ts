@@ -6,6 +6,7 @@ import {
   useRoute,
   useRouter,
   type LocationQueryRaw,
+  type RouteParamsRaw,
   type RouteLocationNormalized,
   type RouteLocationRaw,
   type Router,
@@ -346,7 +347,7 @@ export async function hydrateRoutes(
  */
 export type LocaleTarget =
   | string
-  | { name: string; params?: Record<string, string>; query?: LocationQueryRaw; hash?: string }
+  | { name: string; params?: RouteParamsRaw; query?: LocationQueryRaw; hash?: string }
 
 /** What `useLocaleRoutes()` hands back. */
 export interface LocaleRoutes {
@@ -359,7 +360,7 @@ export interface LocaleRoutes {
   /** An href for `to` in `locale`, absolute when that locale lives on another host. */
   localeHref(to: LocaleTarget, locale?: string): string
   /** The current page in `locale`, keeping the current params unless `params` is given. */
-  switchLocalePath(locale: string, params?: Record<string, string>): string
+  switchLocalePath(locale: string, params?: RouteParamsRaw): string
 }
 
 /**
@@ -387,7 +388,7 @@ function warnUnresolved(target: string): void {
 /** A target reduced to a base route name plus what the caller wants carried over. */
 interface LocaleTargetParts {
   name: string
-  params?: Record<string, string>
+  params?: RouteParamsRaw
   query?: LocationQueryRaw
   hash?: string
 }
@@ -430,7 +431,7 @@ export function useLocaleRoutes(): LocaleRoutes {
   const defaultPrefix = prefixed && defaultLocale ? `/${defaultLocale}` : ''
 
   function currentLocale(): string {
-    return ctx.meta?.locale ?? defaultLocale
+    return ctx?.meta?.locale ?? defaultLocale
   }
 
   /** `fi__about` becomes `about`, a name without a known locale stays itself. */
@@ -460,7 +461,7 @@ export function useLocaleRoutes(): LocaleRoutes {
       }
       return {
         name: baseName(matched.name),
-        params: { ...matched.params } as Record<string, string>,
+        params: { ...matched.params },
         query: matched.query,
         hash: matched.hash,
       }
@@ -537,12 +538,12 @@ export function useLocaleRoutes(): LocaleRoutes {
     return href
   }
 
-  function switchLocalePath(locale: string, params?: Record<string, string>): string {
+  function switchLocalePath(locale: string, params?: RouteParamsRaw): string {
     const current = router.currentRoute.value
     return localeHref(
       {
         name: baseName(typeof current.name === 'string' ? current.name : ''),
-        params: params ?? ({ ...current.params } as Record<string, string>),
+        params: params ?? { ...current.params },
         query: current.query,
         hash: current.hash,
       },

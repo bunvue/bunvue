@@ -543,14 +543,14 @@ const { locale, locales, localePath, localeHref, switchLocalePath } = useLocaleR
 ```ts
 type LocaleTarget =
   | string
-  | { name: string; params?: Record<string, string>; query?: LocationQueryRaw; hash?: string }
+  | { name: string; params?: RouteParamsRaw; query?: LocationQueryRaw; hash?: string }
 
 interface LocaleRoutes {
   locale: string
   locales: string[]
   localePath(to: LocaleTarget, locale?: string): RouteLocationRaw
   localeHref(to: LocaleTarget, locale?: string): string
-  switchLocalePath(locale: string, params?: Record<string, string>): string
+  switchLocalePath(locale: string, params?: RouteParamsRaw): string
 }
 ```
 

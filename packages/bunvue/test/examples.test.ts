@@ -141,7 +141,7 @@ for (const name of examples) {
       expect(existsSync(join(root, '.gitignore'))).toBe(true)
       const readme = readFileSync(join(root, 'README.md'), 'utf8')
       // Only `basic` is the giget starter, the others are demos run from the repo.
-      const giget = `gh:zanmato/bunvue/examples/${basename(root)}`
+      const giget = `gh:bunvue/bunvue/examples/${basename(root)}`
       if (name === 'basic') {
         expect(readme).toContain(giget)
       } else {

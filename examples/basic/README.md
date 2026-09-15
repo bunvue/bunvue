@@ -14,7 +14,7 @@ bun run lint        # eslint over the app
 bun run format      # prettier over the app
 ```
 
-The giget command works once bunvue is published to npm. ESLint and Prettier
+ESLint and Prettier
 come configured, so `bun run lint` and `bun run format` work out of the box.
 
 Requires Bun 1.4 or newer.
