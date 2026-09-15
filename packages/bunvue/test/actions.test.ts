@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test'
 import { ref } from 'vue'
 import type { Plugin } from 'vite'
-import { createClientAfterEach } from '../src/client.ts'
+import { createClientAfterEach, createClientBeforeEach, serverRouteContext } from '../src/client.ts'
 import { RouteContext, mergeResponseHeaders } from '../src/context.ts'
 import { isCrossSiteRequest, resolveCsrf } from '../src/csrf.ts'
 import { bunvue } from '../src/plugin/index.ts'
@@ -148,6 +148,23 @@ describe('actionData in the hydration payload', () => {
       expect(ctxHydration.actionData).toEqual({ errors: { email: 'Invalid' } })
       hook(to('/'), to('/form'))
       expect(ctxHydration.actionData).toBeUndefined()
+    } finally {
+      if (!hadWindow) {
+        delete scope.window
+      }
+    }
+  })
+
+  it('is reachable from route meta inside a later guard', () => {
+    const scope = globalThis as Record<string, unknown>
+    const hadWindow = 'window' in scope
+    scope.window = { location: { hostname: 'localhost', origin: 'http://localhost' } }
+    try {
+      const ctxHydration = { url: new URL('http://localhost/'), params: {} } as RouteContextLike
+      const guard = createClientBeforeEach({ routeMap: {}, ctxHydration })
+      const to = { fullPath: '/', params: {}, query: {}, matched: [{ path: '/' }], meta: {} }
+      guard(to as never)
+      expect((to.meta as Record<symbol, unknown>)[serverRouteContext]).toBe(ctxHydration)
     } finally {
       if (!hadWindow) {
         delete scope.window

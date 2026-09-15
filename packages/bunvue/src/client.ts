@@ -176,17 +176,19 @@ export function createServerBeforeEach({ routeMap, ctxHydration }: BeforeEachArg
 }
 
 /**
- * Client-side guard. Performs the same name swap by hostname and nothing
- * else: the hydrated context is refreshed in `createClientAfterEach()` once
- * the navigation is confirmed.
+ * Client-side guard. Performs the same name swap by hostname and puts the
+ * hydrated context on the route's meta, so guards an app registers after this
+ * one can reach `ctx.state` and the like. The route fields on the context are
+ * refreshed in `createClientAfterEach()` once the navigation is confirmed.
  */
-export function createClientBeforeEach({ routeMap }: Pick<BeforeEachArgs, 'routeMap'>) {
+export function createClientBeforeEach({ routeMap, ctxHydration }: BeforeEachArgs) {
   return function clientBeforeEach(to: RouteLocationNormalized) {
     const path = to.matched[0]?.path ?? '/'
     const route = resolveRouteKey(window.location.hostname, path, routeMap)
     if (route && to.name !== route.name) {
       return { name: route.name, params: to.params, query: to.query }
     }
+    ;(to.meta as Record<symbol, unknown>)[serverRouteContext] = ctxHydration
     return undefined
   }
 }

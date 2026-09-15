@@ -12,7 +12,8 @@ becomes the notes of its GitHub release.
 - The layout and the route context now change once a client side navigation is
   confirmed, in the same render as the page. Updating them in `beforeEach`
   rendered the old page inside the new layout once and remounted it, and left
-  the context on the wrong route when a navigation was cancelled.
+  the context on the wrong route when a navigation was cancelled. The context
+  stays reachable on `to.meta` inside an app's own `beforeEach` guards.
 - `useLocaleRoutes()` accepts array params, as a `[slug+].vue` route needs.
 
 ## [0.1.0-beta.0] - 2026-09-15

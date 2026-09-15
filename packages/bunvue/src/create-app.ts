@@ -90,7 +90,7 @@ export async function createBunvueApp(options: CreateBunvueAppOptions): Promise<
     instance.provide(serverRouteContext, ctxHydration)
   } else {
     attachClientNavigation(ctxHydration, router)
-    router.beforeEach(createClientBeforeEach({ routeMap }))
+    router.beforeEach(createClientBeforeEach({ routeMap, ctxHydration }))
     router.afterEach(createClientAfterEach({ routeMap, ctxHydration }, layoutRef))
   }
 
