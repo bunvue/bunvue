@@ -1,6 +1,6 @@
 {
   "name": "bunvue",
-  "version": "0.0.1",
+  "version": "0.1.0-beta.0",
   "description": "Vue 3 SSR on Bun.serve with Vite dev/HMR and bundling",
   "type": "module",
   "license": "MIT",
