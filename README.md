@@ -12,7 +12,7 @@ Start here: [packages/bunvue/README.md](packages/bunvue/README.md).
 with giget:
 
 ```sh
-bunx giget@latest gh:zanmato/bunvue/examples/basic my-app --install
+bunx giget@latest gh:bunvue/bunvue/examples/basic my-app --install
 ```
 
 The other examples are demos of one feature each and run from a checkout of this

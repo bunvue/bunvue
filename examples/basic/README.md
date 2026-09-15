@@ -4,7 +4,7 @@ A minimal bunvue app with a layout, a typed `context.ts`, page actions, streamin
 client only and server only pages, and redirect and status signals.
 
 ```sh
-bunx giget@latest gh:zanmato/bunvue/examples/basic my-app --install
+bunx giget@latest gh:bunvue/bunvue/examples/basic my-app --install
 cd my-app
 bun run dev         # bun server.ts --dev, Vite in process with HMR
 bun run build       # client and SSR build into dist/

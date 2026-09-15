@@ -6,11 +6,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zanmato/bunvue.git",
+    "url": "git+https://github.com/bunvue/bunvue.git",
     "directory": "packages/bunvue"
   },
-  "homepage": "https://github.com/zanmato/bunvue/tree/main/packages/bunvue#readme",
-  "bugs": "https://github.com/zanmato/bunvue/issues",
+  "homepage": "https://github.com/bunvue/bunvue/tree/main/packages/bunvue#readme",
+  "bugs": "https://github.com/bunvue/bunvue/issues",
   "files": [
     "src",
     "virtual-ts",
