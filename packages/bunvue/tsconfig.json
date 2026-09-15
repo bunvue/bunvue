@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "bunvue": ["./src/index.ts"],
+      "bunvue/client": ["./src/client.ts"],
+      "bunvue/server": ["./src/server.ts"],
+      "bunvue/plugin": ["./src/plugin/index.ts"]
+    }
+  },
+  "include": ["src", "virtual-ts", "test", "virtual.d.ts"]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "bunvue-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "examples/*",
+      "bench"
+    ],
+    "catalog": {
+      "vite": "^8.0.16",
+      "vue": "^3.5.26",
+      "vue-router": "^4.6.4",
+      "@vitejs/plugin-vue": "^6.0.5",
+      "@unhead/vue": "^3.4.0",
+      "devalue": "^5.8.1",
+      "typescript": "^6.0.3",
+      "@types/bun": "latest",
+      "eslint": "^10.10.0",
+      "@eslint/js": "^10.0.1",
+      "typescript-eslint": "^8.70.0",
+      "eslint-plugin-vue": "^10.11.0",
+      "eslint-config-prettier": "^10.1.8",
+      "prettier": "^3.9.6",
+      "globals": "^17.12.0"
+    }
+  },
+  "scripts": {
+    "test": "bun test",
+    "bench": "bun run --cwd bench bench",
+    "typecheck": "bun run --cwd packages/bunvue typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.11.0",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.6",
+    "typescript-eslint": "^8.70.0"
+  }
+}

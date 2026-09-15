@@ -1,0 +1,73 @@
+{
+  "name": "bunvue",
+  "version": "0.0.1",
+  "description": "Vue 3 SSR on Bun.serve with Vite dev/HMR and bundling",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zanmato/bunvue.git",
+    "directory": "packages/bunvue"
+  },
+  "homepage": "https://github.com/zanmato/bunvue/tree/main/packages/bunvue#readme",
+  "bugs": "https://github.com/zanmato/bunvue/issues",
+  "files": [
+    "src",
+    "virtual-ts",
+    "virtual.d.ts",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "bun": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./plugin": {
+      "types": "./src/plugin/index.ts",
+      "import": "./src/plugin/index.ts"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "import": "./src/client.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "import": "./src/server.ts"
+    },
+    "./virtual": {
+      "types": "./virtual.d.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "devalue": "^5.8.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0",
+    "vue-router": "^4.0.0",
+    "@unhead/vue": "^3.4.0",
+    "vite": "^8.0.0",
+    "@vitejs/plugin-vue": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "@vitejs/plugin-vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@unhead/vue": "^3.4.0",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4"
+  }
+}

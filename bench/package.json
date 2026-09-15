@@ -1,0 +1,19 @@
+{
+  "name": "bunvue-bench",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bench": "bun run.ts",
+    "build": "cd tree && bun --bun vite build"
+  },
+  "dependencies": {
+    "@unhead/vue": "catalog:",
+    "fastify": "^5.12.1",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "vite": "catalog:"
+  }
+}
