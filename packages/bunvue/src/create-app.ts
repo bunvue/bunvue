@@ -8,6 +8,7 @@ import {
 import type { VueHeadClient } from '@unhead/vue'
 import {
   attachClientNavigation,
+  createClientAfterEach,
   createClientBeforeEach,
   createHistory,
   createServerBeforeEach,
@@ -89,7 +90,8 @@ export async function createBunvueApp(options: CreateBunvueAppOptions): Promise<
     instance.provide(serverRouteContext, ctxHydration)
   } else {
     attachClientNavigation(ctxHydration, router)
-    router.beforeEach(createClientBeforeEach({ routeMap, ctxHydration }, layoutRef))
+    router.beforeEach(createClientBeforeEach({ routeMap }))
+    router.afterEach(createClientAfterEach({ routeMap, ctxHydration }, layoutRef))
   }
 
   instance.use(router)

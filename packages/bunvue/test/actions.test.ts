@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test'
 import { ref } from 'vue'
 import type { Plugin } from 'vite'
-import { createClientBeforeEach } from '../src/client.ts'
+import { createClientAfterEach } from '../src/client.ts'
 import { RouteContext, mergeResponseHeaders } from '../src/context.ts'
 import { isCrossSiteRequest, resolveCsrf } from '../src/csrf.ts'
 import { bunvue } from '../src/plugin/index.ts'
@@ -140,14 +140,60 @@ describe('actionData in the hydration payload', () => {
         params: {},
         actionData: { errors: { email: 'Invalid' } },
       } as unknown as RouteContextLike
-      const guard = createClientBeforeEach({ routeMap: {}, ctxHydration }, ref('default'))
+      const hook = createClientAfterEach({ routeMap: {}, ctxHydration }, ref('default'))
       const to = (path: string) =>
         ({ fullPath: path, params: {}, query: {}, matched: [{ path }], meta: {} }) as never
       // The hydrating navigation keeps it, so the client renders the same markup.
-      guard(to('/form'))
+      hook(to('/form'), to('/form'))
       expect(ctxHydration.actionData).toEqual({ errors: { email: 'Invalid' } })
-      guard(to('/'))
+      hook(to('/'), to('/form'))
       expect(ctxHydration.actionData).toBeUndefined()
+    } finally {
+      if (!hadWindow) {
+        delete scope.window
+      }
+    }
+  })
+
+  it('leaves the context and the layout alone when the navigation fails', () => {
+    const scope = globalThis as Record<string, unknown>
+    const hadWindow = 'window' in scope
+    scope.window = { location: { hostname: 'localhost', origin: 'http://localhost' } }
+    try {
+      const routeMap = {
+        '*__/': { id: '/pages/index.vue', name: 'index', path: '/', key: '*__/', meta: {} },
+        '*__/admin': {
+          id: '/pages/admin.vue',
+          name: 'admin',
+          path: '/admin',
+          key: '*__/admin',
+          meta: {},
+          layout: 'admin',
+        },
+      }
+      const ctxHydration = {
+        url: new URL('http://localhost/'),
+        params: {},
+        actionData: { ok: true },
+      } as unknown as RouteContextLike
+      const layout = ref('default')
+      const hook = createClientAfterEach({ routeMap, ctxHydration }, layout)
+      const to = (path: string) =>
+        ({ fullPath: path, params: {}, query: {}, matched: [{ path }], meta: {} }) as never
+      hook(to('/'), to('/'))
+      expect(ctxHydration.name).toBe('index')
+
+      hook(to('/admin'), to('/'), new Error('aborted'))
+      expect(ctxHydration.name).toBe('index')
+      expect(ctxHydration.url.pathname).toBe('/')
+      expect(ctxHydration.actionData).toEqual({ ok: true })
+      expect(layout.value).toBe('default')
+
+      hook(to('/admin'), to('/'))
+      expect(ctxHydration.name).toBe('admin')
+      expect(ctxHydration.url.pathname).toBe('/admin')
+      expect(ctxHydration.actionData).toBeUndefined()
+      expect(layout.value).toBe('admin')
     } finally {
       if (!hadWindow) {
         delete scope.window

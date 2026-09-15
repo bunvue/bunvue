@@ -175,22 +175,48 @@ export function createServerBeforeEach({ routeMap, ctxHydration }: BeforeEachArg
 }
 
 /**
- * Client-side guard. Performs the same name swap by hostname and refreshes
- * `url`, `params`, `meta` and the layout on the hydrated context. The action
- * result and the hydration data belong to the server response only, so both
- * are dropped on the first client navigation.
+ * Client-side guard. Performs the same name swap by hostname and nothing
+ * else: the hydrated context is refreshed in `createClientAfterEach()` once
+ * the navigation is confirmed.
  */
-export function createClientBeforeEach(
-  { routeMap, ctxHydration }: BeforeEachArgs,
-  layout: Ref<string>,
-) {
-  let firstDone = false
+export function createClientBeforeEach({ routeMap }: Pick<BeforeEachArgs, 'routeMap'>) {
   return function clientBeforeEach(to: RouteLocationNormalized) {
     const path = to.matched[0]?.path ?? '/'
     const route = resolveRouteKey(window.location.hostname, path, routeMap)
     if (route && to.name !== route.name) {
       return { name: route.name, params: to.params, query: to.query }
     }
+    return undefined
+  }
+}
+
+/**
+ * Client-side after hook. Refreshes `url`, `params`, `meta` and the layout on
+ * the hydrated context, and stores the context on the route's meta for
+ * `useRouteContext()`. The action result and the hydration data belong to the
+ * server response only, so both are dropped on the first client navigation.
+ *
+ * This runs after the navigation is confirmed rather than in `beforeEach`, so
+ * a cancelled navigation leaves the context on the route that is still
+ * displayed, and the layout and the page swap in the same render. Updating
+ * the layout ref from a guard mounted the old page inside the new layout once
+ * before the route changed, and then remounted it there.
+ */
+export function createClientAfterEach(
+  { routeMap, ctxHydration }: BeforeEachArgs,
+  layout: Ref<string>,
+) {
+  let firstDone = false
+  return function clientAfterEach(
+    to: RouteLocationNormalized,
+    _from: RouteLocationNormalized,
+    failure?: unknown,
+  ): void {
+    if (failure) {
+      return
+    }
+    const path = to.matched[0]?.path ?? '/'
+    const route = resolveRouteKey(window.location.hostname, path, routeMap)
 
     if (firstDone) {
       ctxHydration.firstRender = false
@@ -211,9 +237,8 @@ export function createClientBeforeEach(
       ctxHydration.clientOnly = route.clientOnly
     }
 
-    layout.value = ctxHydration.layout ?? 'default'
     ;(to.meta as Record<symbol, unknown>)[serverRouteContext] = ctxHydration
-    return undefined
+    layout.value = ctxHydration.layout ?? 'default'
   }
 }
 
