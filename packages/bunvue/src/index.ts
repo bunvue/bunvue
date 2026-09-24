@@ -190,14 +190,21 @@ export function createBunvue<S = undefined>(options: BunvueOptions<S>): BunvueAp
             return file
           }
         }
-        const route = selectCandidate(group.candidates, url.hostname)
+        let route = selectCandidate(group.candidates, url.hostname)
         if (!route || !runtime) {
           return notFound(request, url)
         }
-        // In dev the table is rebuilt asynchronously, so a request can still
-        // reach the handler of a page that was just deleted.
+        // In dev the refresh above swaps in a fresh route table after every
+        // edit while this request still runs the handler built for the old
+        // one, and the table is also rebuilt asynchronously after a delete.
+        // Look the route up by key in the current table: it is only missing
+        // when the page is gone.
         if (devRuntime && !runtime.routes.includes(route)) {
-          return notFound(request, url)
+          const key = route.key
+          route = runtime.routes.find((candidate) => candidate.key === key)
+          if (!route) {
+            return notFound(request, url)
+          }
         }
         // Only a page with an action accepts anything but GET and HEAD, and
         // only from its own origin, checked before the body or context.ts.

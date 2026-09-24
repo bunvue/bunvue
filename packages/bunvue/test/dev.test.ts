@@ -15,6 +15,12 @@ const scratchPage = join(exampleRoot, 'client', 'pages', 'hmr-scratch.vue')
 const actionPage = join(exampleRoot, 'client', 'pages', 'hmr-action.vue')
 const actionFile = join(exampleRoot, 'client', 'pages', 'hmr-action.server.ts')
 
+/**
+ * Long enough for chokidar to report a write and for the dev runtime's settle
+ * window to pass, so the next request is the one that performs the refresh.
+ */
+const SETTLE_WAIT_MS = 500
+
 const page = (body: string): string => `<template>\n  <p>${body}</p>\n</template>\n`
 
 const action = (to: string): string =>
@@ -141,6 +147,17 @@ describe('development mode', () => {
           (response, body) => response.status === 200 && body.includes('scratch v2'),
         ),
       ).toContain('scratch v2')
+
+      // The first request after an edit runs the handler built for the
+      // previous route table while the refresh swaps in a new one. It must
+      // still find its route rather than answer 404 (the "flash then Not
+      // Found" bug seen in the browser after every HMR reload).
+      await Bun.sleep(300)
+      writeFileSync(scratchPage, page('scratch v3'))
+      await Bun.sleep(SETTLE_WAIT_MS)
+      const first = await get('/hmr-scratch')
+      expect(first.status).toBe(200)
+      expect(await first.text()).toContain('scratch v3')
     } finally {
       await Bun.sleep(300)
       rmSync(scratchPage, { force: true })
