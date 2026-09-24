@@ -7,13 +7,31 @@ becomes the notes of its GitHub release.
 
 ## [Unreleased]
 
+## [0.1.0-beta.3] - 2026-09-24
+
+### Fixed
+
+- In dev, the first request after editing any file no longer answers 404. The
+  refresh swaps in a fresh route table while that request still runs the
+  handler built for the old one, and the handler treated its now stale route
+  object as a deleted page. It looks the route up by key in the current table
+  instead, so only a page that is really gone answers 404.
+
+## [0.1.0-beta.2] - 2026-09-15
+
+### Fixed
+
+- The route context stays reachable on `to.meta` inside an app's own
+  `beforeEach` guards, which the previous release broke.
+
+## [0.1.0-beta.1] - 2026-09-15
+
 ### Fixed
 
 - The layout and the route context now change once a client side navigation is
   confirmed, in the same render as the page. Updating them in `beforeEach`
   rendered the old page inside the new layout once and remounted it, and left
-  the context on the wrong route when a navigation was cancelled. The context
-  stays reachable on `to.meta` inside an app's own `beforeEach` guards.
+  the context on the wrong route when a navigation was cancelled.
 - `useLocaleRoutes()` accepts array params, as a `[slug+].vue` route needs.
 
 ## [0.1.0-beta.0] - 2026-09-15
@@ -56,5 +74,8 @@ First public release of bunvue, a port of `@fastify/vite` and `@fastify/vue` to
 - A standalone `basic` example with ESLint and Prettier set up, copied with giget,
   plus demos for locale prefix routing, locale domain routing and reverse proxying.
 
-[Unreleased]: https://github.com/bunvue/bunvue/compare/v0.1.0-beta.0...main
+[Unreleased]: https://github.com/bunvue/bunvue/compare/v0.1.0-beta.3...main
+[0.1.0-beta.3]: https://github.com/bunvue/bunvue/compare/v0.1.0-beta.2...v0.1.0-beta.3
+[0.1.0-beta.2]: https://github.com/bunvue/bunvue/compare/v0.1.0-beta.1...v0.1.0-beta.2
+[0.1.0-beta.1]: https://github.com/bunvue/bunvue/compare/v0.1.0-beta.0...v0.1.0-beta.1
 [0.1.0-beta.0]: https://github.com/bunvue/bunvue/commits/v0.1.0-beta.0
