@@ -1,9 +1,19 @@
 <template>
   <h2>Todo List</h2>
-  <ul>
-    <li v-for="(item, i) in todoList" :key="`item-${i}`">{{ item }}</li>
+  <ul
+    class="mb-6 divide-y divide-slate-200 rounded-lg border border-slate-200 dark:divide-slate-800 dark:border-slate-800"
+  >
+    <li
+      v-for="(item, i) in todoList"
+      :key="`item-${i}`"
+      class="flex items-center gap-3 px-4 py-3 before:size-2 before:rounded-full before:bg-emerald-500"
+    >
+      {{ item }}
+    </li>
   </ul>
-  <p>Path: {{ ctx.url.pathname }}</p>
+  <div class="font-mono text-xs text-slate-400 dark:text-slate-500">
+    <p>Path: {{ ctx.url.pathname }}</p>
+  </div>
 </template>
 
 <script setup lang="ts">

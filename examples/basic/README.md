@@ -17,4 +17,6 @@ bun run format      # prettier over the app
 ESLint and Prettier
 come configured, so `bun run lint` and `bun run format` work out of the box.
 
+Styling uses Tailwind CSS v4 through `@tailwindcss/vite`, with the stylesheet in `client/main.css`.
+
 Requires Bun 1.4 or newer.

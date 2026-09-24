@@ -1,13 +1,20 @@
 <template>
   <h1>Newsletter</h1>
-  <p v-if="sent" id="sent">Thanks, you are subscribed.</p>
-  <form method="post">
-    <label>
+  <div
+    v-if="sent"
+    class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300"
+  >
+    <p id="sent">Thanks, you are subscribed.</p>
+  </div>
+  <form method="post" class="flex max-w-sm flex-col gap-4">
+    <label class="flex flex-col gap-1.5">
       Email
       <input name="email" type="email" :value="values.email ?? ''" />
     </label>
     <p v-if="errors.email" id="email-error">{{ errors.email }}</p>
-    <button type="submit">Subscribe</button>
+    <div>
+      <button type="submit">Subscribe</button>
+    </div>
   </form>
 </template>
 
